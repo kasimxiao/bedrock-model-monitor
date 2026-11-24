@@ -9,6 +9,18 @@
 
 依赖：Python 3（只用标准库）、AWS CLI v2，并且已配置好凭证。
 
+## 实际效果
+
+**通用调用监控**（`config.generic.json`，自动发现东京区域的 7 个模型，最近 7 天，按小时聚合）：
+
+![通用调用监控](docs/preview-generic.png)
+
+**降级链监控**（`config.json`，us-east-1，GPT-6.2 Sol → GPT-6.1 Sol → Claude Opus 5.5，最近 3 天）：
+
+![降级链监控](docs/preview-chain.png)
+
+> 两张图都是用 CloudWatch 真实指标渲染的（`tools/render_preview.py`）。测试账号的调用量很小，所以曲线比较稀疏；生产流量下是连续曲线。控制台里还会多一个"⑧ 时间范围汇总"数字组件，服务端出图不支持这个组件，所以预览里没有画。
+
 ## 快速开始
 
 ```bash
@@ -85,3 +97,14 @@ python3 deploy.py deploy -c config.json --dry-run           # 只打印将要执
 - 原生指标只有在账号里只有 New API 调用这些模型时，才等于"渠道"指标；如果有其他应用调用同一个模型，数据会混在一起。
 - 原生指标看不到"请求没到 Bedrock 的失败"和"停用渠道是否恢复"，这两项需要探测类自定义指标，见手册步骤 2-B。
 - 费用：看板前 3 个免费，之后约 $3 / 月 / 个；告警按所含指标数计费（标准分辨率约 $0.10 / 指标 / 月），错误率告警含 3 个指标，约 $0.30 / 月 / 模型。具体以 CloudWatch 定价页为准。
+
+## 生成预览图（可选）
+
+```bash
+pip install pillow
+python3 tools/render_preview.py -c config.json --region us-east-1 --range=-P3D -o docs/preview-chain.png
+python3 tools/render_preview.py -c config.generic.json --range=-P7D --period 3600 -o docs/preview-generic.png
+```
+
+脚本按看板布局调用 `GetMetricWidgetImage` 逐个出图，再拼成一张。CloudWatch 服务端出图不支持中文，所以标题由本地中文字体补画，图例里的中文后缀会替换成英文。`--range` 要写成 `--range=-P7D` 的形式，否则 `-P7D` 会被当成一个参数。
+
