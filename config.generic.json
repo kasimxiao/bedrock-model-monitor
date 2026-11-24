@@ -1,0 +1,18 @@
+{
+  "mode": "generic",
+  "region": "ap-northeast-1",
+  "name": "Bedrock-Model-Monitor",
+  "title": "Bedrock 模型监控",
+  "period": 60,
+  "range": "-PT6H",
+  "alarms": {
+    "enabled": false,
+    "sns_topic_arn": "",
+    "sns_email": "",
+    "error_rate_pct": 5,
+    "min_invocations": 20,
+    "datapoints": 3,
+    "evaluation_periods": 5
+  },
+  "models": "auto"
+}

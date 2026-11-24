@@ -1,0 +1,33 @@
+{
+  "region": "ap-northeast-1",
+  "name": "Bedrock-Model-Monitor",
+  "title": "Bedrock 模型监控",
+  "period": 60,
+  "range": "-PT3H",
+  "alarms": {
+    "enabled": false,
+    "sns_topic_arn": "",
+    "sns_email": "",
+    "error_rate_pct": 5,
+    "min_invocations": 20,
+    "datapoints": 3,
+    "evaluation_periods": 5
+  },
+  "models": [
+    {
+      "label": "GPT-6.2 Sol",
+      "model_id": "global.openai.gpt-6.2-sol",
+      "ttft_p95_ms": 0
+    },
+    {
+      "label": "GPT-6.1 Sol",
+      "model_id": "global.openai.gpt-6.1-sol",
+      "ttft_p95_ms": 0
+    },
+    {
+      "label": "Claude Opus 5.5",
+      "model_id": "global.anthropic.claude-opus-5-5",
+      "ttft_p95_ms": 0
+    }
+  ]
+}
